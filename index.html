@@ -22,12 +22,42 @@
 <body>
   <canvas id="riveCanvas"></canvas>
 
-  <script>
-    new rive.Rive({
-      src: 'https://jdawg-video-motion.github.io/girl2/girl2.riv',
-      canvas: document.getElementById('riveCanvas'),
-      autoplay: true
-    });
-  </script>
+<script>
+  const riveInstance = new rive.Rive({
+    src: "https://jdawg-video-motion.github.io/girl2/girl2.riv",
+    canvas: document.getElementById("riveCanvas"),
+    autoplay: false,
+    stateMachines: ["State Machine 1"],
+    onLoad: (rive) => {
+      const inputs = rive.stateMachineInputs("State Machine 1");
+
+      const enterTrigger = inputs.find(i => i.name === "Mouse enter");
+      const exitTrigger = inputs.find(i => i.name === "Mouse exit");
+      const clickTrigger = inputs.find(i => i.name === "Click");
+      const isMobileInput = inputs.find(i => i.name === "IsMobile");
+
+      // Set mobile flag (optional: this just sets it based on screen width)
+      if (isMobileInput) {
+        isMobileInput.value = window.innerWidth < 768;
+      }
+
+      // Trigger mouse enter/exit based on hover
+      const canvas = document.getElementById("riveCanvas");
+
+      canvas.addEventListener("mouseenter", () => {
+        enterTrigger?.fire();
+      });
+
+      canvas.addEventListener("mouseleave", () => {
+        exitTrigger?.fire();
+      });
+
+      canvas.addEventListener("click", () => {
+        clickTrigger?.fire();
+      });
+    }
+  });
+</script>
+
 </body>
 </html>
